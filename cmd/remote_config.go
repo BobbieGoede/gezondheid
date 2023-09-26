@@ -1,11 +1,12 @@
-package main
+package cmd
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"os"
+
+	"gopkg.in/yaml.v2"
 )
 
 type RemoteConfig struct {
@@ -34,7 +35,7 @@ func (configs *RemoteConfigs) remove(url string) {
 
 func (configs *RemoteConfigs) save(filename string) {
 	fmt.Printf("%#v\n", configs)
-	b, err := json.Marshal(configs)
+	b, err := yaml.Marshal(configs)
 	if err != nil {
 		log.Fatalf("Unable to marshal data %v\n", err)
 	}
@@ -57,7 +58,7 @@ func (configs *RemoteConfigs) load(filename string) {
 	_, err := os.Stat(filename)
 	if errors.Is(err, os.ErrNotExist) {
 		fmt.Println("Creating initial settings file")
-		configs.load(filename)
+		configs.save(filename)
 		return
 	}
 
@@ -66,7 +67,7 @@ func (configs *RemoteConfigs) load(filename string) {
 		log.Fatal(err)
 	}
 
-	err = json.Unmarshal(b, &configs)
+	err = yaml.Unmarshal(b, &configs)
 	if err != nil {
 		log.Fatal(err)
 	}

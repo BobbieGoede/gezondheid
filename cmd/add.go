@@ -6,27 +6,31 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/bobbiegoede/go-cli-test/todo"
 	"github.com/spf13/cobra"
 )
 
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add",
-	Short: "A brief description of your command",
-	Long:  `A longer description that spans multiple lines and likely contains examples`,
-	Run:   addRun,
-}
+	Short: "Add a url to monitor",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
 
-func addRun(cmd *cobra.Command, args []string) {
-	items := []todo.Item{}
-	fmt.Println("add called")
-	for _, val := range args {
-		// fmt.Println(val)
-		items = append(items, todo.Item{Text: val})
-	}
-	// fmt.Printf("%#v\n", items)
-	todo.SaveItems("x", items)
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	// Args: cobra.ExactArgs(3),
+	Run: func(cmd *cobra.Command, args []string) {
+		url, _ := cmd.Flags().GetString("url")
+		interval, _ := cmd.Flags().GetString("interval")
+		filename, _ := cmd.Flags().GetString("config")
+		fmt.Printf("%#v %#v %#v", url, interval, filename)
+
+		var configs = RemoteConfigs{}
+		configs.load(filename)
+		configs.add(RemoteConfig{Url: url, Interval: interval})
+		configs.save(filename)
+	},
 }
 
 func init() {
@@ -36,7 +40,8 @@ func init() {
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// addCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// addCmd.Flags().String("url", "", "Url to monitor")
+	addCmd.Flags().String("interval", "10m", "Duration of the check interval")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
