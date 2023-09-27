@@ -4,8 +4,6 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -24,11 +22,12 @@ to quickly create a Cobra application.`,
 		url, _ := cmd.Flags().GetString("url")
 		interval, _ := cmd.Flags().GetString("interval")
 		filename, _ := cmd.Flags().GetString("config")
-		fmt.Printf("%#v %#v %#v", url, interval, filename)
+		configname, _ := cmd.Flags().GetString("name")
+		// fmt.Printf("%#v %#v %#v %#v", url, interval, filename, configname)
 
 		var configs = RemoteConfigs{}
 		configs.load(filename)
-		configs.add(RemoteConfig{Url: url, Interval: interval})
+		configs.add(RemoteConfig{Url: url, Interval: interval, Name: configname})
 		configs.save(filename)
 	},
 }
@@ -41,7 +40,7 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// addCmd.Flags().String("url", "", "Url to monitor")
-	addCmd.Flags().String("interval", "10m", "Duration of the check interval")
+	addCmd.Flags().StringP("interval", "i", "10m", "Duration of the check interval")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:

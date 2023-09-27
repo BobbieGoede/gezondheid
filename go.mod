@@ -1,4 +1,4 @@
-module github.com/bobbiegoede/go-cli-test
+module github.com/bobbiegoede/gezondheid
 
 go 1.21.0
 

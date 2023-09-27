@@ -12,14 +12,9 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "go-cli-test",
+	Use:   "gezondheid",
 	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Long:  ``,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -44,6 +39,8 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.PersistentFlags().String("url", "", "Url to monitor")
-	rootCmd.PersistentFlags().String("config", "settings.yaml", "Configuration file")
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
+	rootCmd.PersistentFlags().StringP("name", "n", "", "Name of configuration")
+	rootCmd.PersistentFlags().StringP("url", "u", "", "Url to monitor")
+	rootCmd.PersistentFlags().StringP("config", "c", "settings.yaml", "Configuration file")
 }

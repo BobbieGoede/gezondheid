@@ -4,22 +4,34 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net/url"
 	"os"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
 
 type RemoteConfig struct {
+	Name     string `json:"name"`
 	Url      string `json:"url"`
 	Interval string `json:"interval"`
 }
 type RemoteConfigs []RemoteConfig
 
 func (configs *RemoteConfigs) add(config RemoteConfig) {
+	parsed, err := url.Parse(config.Url)
+	if err != nil {
+		log.Fatal("Failed to parse url!")
+	}
+
+	if len(config.Name) == 0 {
+		config.Name = strings.ReplaceAll(parsed.Host, ".", "-")
+	}
+
 	*configs = append(*configs, config)
 }
 
-func (configs *RemoteConfigs) remove(url string) {
+func (configs *RemoteConfigs) indexOfUrl(url string) int {
 	found := -1
 	for index, config := range *configs {
 		if config.Url == url {
@@ -28,8 +40,24 @@ func (configs *RemoteConfigs) remove(url string) {
 		}
 	}
 
-	if found >= 0 {
-		*configs = append((*configs)[:found], (*configs)[found+1:]...)
+	return found
+}
+
+func (configs *RemoteConfigs) indexOfName(name string) int {
+	found := -1
+	for index, config := range *configs {
+		if config.Name == name {
+			found = index
+			break
+		}
+	}
+
+	return found
+}
+
+func (configs *RemoteConfigs) removeAt(index int) {
+	if index >= 0 {
+		*configs = append((*configs)[:index], (*configs)[index+1:]...)
 	}
 }
 

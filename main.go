@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/bobbiegoede/go-cli-test/cmd"
+	"github.com/bobbiegoede/gezondheid/cmd"
 )
 
 func main() {

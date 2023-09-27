@@ -14,8 +14,9 @@ import (
 
 // monitorCmd represents the monitor command
 var monitorCmd = &cobra.Command{
-	Use:   "monitor",
-	Short: "Start monitoring configured urls",
+	Use:     "monitor",
+	Aliases: []string{"monit"},
+	Short:   "Start monitoring configured urls",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
