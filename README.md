@@ -10,7 +10,7 @@ Gezondheid `/ɣəˈzɔntˌɦɛi̯t/` (Dutch for "Health") is a simple CLI tool t
 # Usage
 
 ## Monitor
-To monitor the confitured endpoint run the following command: 
+To monitor the configured endpoint run the following command: 
 ```shell
 gezondheid monitor -u <url>
 ```
