@@ -96,7 +96,7 @@ func monitor(client *http.Client, config RemoteConfig) {
 		p := plugins.LoadPlugin(ps.Name)
 		ymlData, err := json.Marshal(ps.Config)
 		if err != nil {
-			log.Fatalf("Failed to create request for #%v!\n", config.Url)
+			log.Fatalf("Failed to create request for %#v!\n", config.Url)
 		}
 
 		p.SetConfig(ymlData)
