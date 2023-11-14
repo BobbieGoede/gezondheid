@@ -8,7 +8,7 @@ import (
 )
 
 type Plugin interface {
-	Run(getCotext func() []byte, next func())
+	Run(getContext func() []byte, next func())
 	SetConfig(config []byte)
 }
 
@@ -23,12 +23,12 @@ func LoadPlugin(path string) Plugin {
 		log.Fatalf("Error looking up symbol:\n%v", err)
 	}
 
-	middlware, ok := sym.(Plugin)
+	middleware, ok := sym.(Plugin)
 	if !ok {
 		log.Fatalf("Invalid plugin type:\n%v", err)
 	}
 
-	return middlware
+	return middleware
 }
 
 type PluginHandler struct {

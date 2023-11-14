@@ -10,7 +10,7 @@ type Handler interface {
 	SetNext(handler Handler)
 }
 
-func SetNextRefrences(hs []Handler) Handler {
+func SetNextReferences(hs []Handler) Handler {
 	for i := 0; i < len(hs)-1; i++ {
 		hs[i].SetNext(hs[i+1])
 	}

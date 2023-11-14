@@ -107,7 +107,7 @@ func monitor(client *http.Client, config RemoteConfig) {
 	h := &DefaultHandler{req: req, duration: duration, client: client, config: config}
 	hs = append(hs, h)
 
-	var first = handlers.SetNextRefrences(hs)
+	var first = handlers.SetNextReferences(hs)
 
 	for {
 		first.HandleRequest(&handlers.Ctx{})
