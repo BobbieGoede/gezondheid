@@ -9,7 +9,7 @@ Gezondheid `/ɣəˈzɔntˌɦɛi̯t/` (Dutch for "Health") is a simple CLI tool t
 
 ## Plugins
 
-Behaviour can be extanded with 3th party plugins like [gezonheid-hook](https://github.com/LiamEderzeel/gezondheid-hook) to add webhook support when healthchecks fail.
+Behaviour can be extended with 3rd party plugins like [gezondheid-hook](https://github.com/LiamEderzeel/gezondheid-hook) to add webhook support when health checks fail.
 
 ```yaml
 - name: test.test
