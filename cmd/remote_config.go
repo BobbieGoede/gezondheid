@@ -11,10 +11,16 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+type Plugin struct {
+	Name   string         `json:"name"`
+	Config map[string]any `json:"config"`
+}
+
 type RemoteConfig struct {
-	Name     string `json:"name"`
-	Url      string `json:"url"`
-	Interval string `json:"interval"`
+	Name     string   `json:"name"`
+	Url      string   `json:"url"`
+	Interval string   `json:"interval"`
+	Plugins  []Plugin `json:"plugins"`
 }
 type RemoteConfigs []RemoteConfig
 

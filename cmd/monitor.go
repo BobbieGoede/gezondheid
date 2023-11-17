@@ -4,12 +4,14 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/bobbiegoede/gezondheid/internal/handlers"
+	"github.com/bobbiegoede/gezondheid/internal/plugins"
+	"github.com/spf13/cobra"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/spf13/cobra"
 )
 
 // monitorCmd represents the monitor command
@@ -52,6 +54,31 @@ to quickly create a Cobra application.`,
 	},
 }
 
+type DefaultHandler struct {
+	config   RemoteConfig
+	client   *http.Client
+	req      *http.Request
+	duration time.Duration
+	next     handlers.Handler
+}
+
+func (h *DefaultHandler) HandleRequest(ctx *handlers.Ctx) {
+	res, err := h.client.Do(h.req)
+	if err != nil {
+		log.Fatalf("Received error: %v\n", err.Error())
+	}
+
+	ctx.Proto = res.Proto
+	ctx.StatusCode = res.StatusCode
+
+	// if res.StatusCode >= 300 {
+	fmt.Printf("%-40s%v\n", h.config.Url, res.Status)
+}
+
+func (h *DefaultHandler) SetNext(handler handlers.Handler) {
+	h.next = handler
+}
+
 func monitor(client *http.Client, config RemoteConfig) {
 	duration, err := time.ParseDuration(config.Interval)
 	if err != nil {
@@ -63,15 +90,27 @@ func monitor(client *http.Client, config RemoteConfig) {
 		log.Fatalf("Failed to create request for #%v!\n", config.Url)
 	}
 
-	for {
-		res, err := client.Do(req)
+	var hs []handlers.Handler
+
+	for _, ps := range config.Plugins {
+		p := plugins.LoadPlugin(ps.Name)
+		ymlData, err := json.Marshal(ps.Config)
 		if err != nil {
-			log.Fatalf("Received error: %v\n", err.Error())
+			log.Fatalf("Failed to create request for %#v!\n", config.Url)
 		}
 
-		// if res.StatusCode >= 300 {
-		fmt.Printf("%-40s%v\n", config.Url, res.Status)
-		// }
+		p.SetConfig(ymlData)
+		h := &plugins.PluginHandler{Plugin: p}
+		hs = append(hs, h)
+	}
+
+	h := &DefaultHandler{req: req, duration: duration, client: client, config: config}
+	hs = append(hs, h)
+
+	var first = handlers.SetNextReferences(hs)
+
+	for {
+		first.HandleRequest(&handlers.Ctx{})
 		time.Sleep(duration)
 	}
 }

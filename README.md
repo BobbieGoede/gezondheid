@@ -47,3 +47,19 @@ gezondheid remove -n <name>
 - -n <name>: Replace <name> with a the name of the endpoint which configuration you want to remove.
 
 This command allows you to easily eliminate endpoints that are no longer needed in your monitoring setup.
+
+## Plugins
+
+Behaviour can be extended with 3rd party plugins like [gezondheid-hook](https://github.com/LiamEderzeel/gezondheid-hook) to add webhook support when health checks fail.
+
+```yaml
+- name: test.test
+  url: https://test.test
+  interval: 10s
+  plugins:
+    - name: "gezondheid-hook.so"
+      config:
+        method: "POST"
+        url: "https://webhook.test"
+        statusCodeMinimum: 200
+```
