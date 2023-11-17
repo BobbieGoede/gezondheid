@@ -82,7 +82,7 @@ func (h *DefaultHandler) SetNext(handler handlers.Handler) {
 func monitor(client *http.Client, config RemoteConfig) {
 	duration, err := time.ParseDuration(config.Interval)
 	if err != nil {
-		log.Fatalf("Unable to parse interval duration %#v of #%v!\n", config.Interval, config.Url)
+		log.Fatalf("Unable to parse interval duration %#v of %#v!\n", config.Interval, config.Url)
 	}
 
 	req, err := http.NewRequest("GET", config.Url, nil)
